@@ -24,3 +24,7 @@ There are no changes to this section from the IndieAuth specification.
 
 ## Authentication code verification
 If a restricted client chose to omit the `me` parameter in the intial request, then it is not possible to verify that the returned profile URL's domain is correct. Therefore, this domain check _MAY_ be skipped by restricted clients.
+
+## Implementations
+* [OpenResty script](https://github.com/thatoddmailbox/privateauth-openresty)
+* [unifi-blink](https://github.com/thatoddmailbox/unifi-blink)
