@@ -3,12 +3,12 @@ PrivateAuth is an extension to the [IndieAuth](https://indieauth.spec.indieweb.o
 
 It tries to be as compatible as possible with IndieAuth from an endpoint perspective. A PrivateAuth endpoint should be able to handle logins for both PrivateAuth and IndieAuth clients. That way, a user may reuse an existing IndieAuth endpoint with a PrivateAuth client, or vice-versa.
 
-To a certain degree, this compatibility extends to clients; however, clients that support both IndieAuth and PrivateAuth logins _MUST_ verify the domain of PrivateAuth logins. In other words, they _MAY NOT_ skip the domain check as part of the "Authentication code verification" section below.
+To a certain degree, this compatibility extends to clients; however, clients that support both IndieAuth and PrivateAuth logins _MUST_ verify the domain of PrivateAuth logins. In other words, they _MAY NOT_ skip the domain check as part of the _Authentication code verification_ section below.
 
 ## Definitions
 A _restricted client_ is one that wishes to limit the users that can sign into it. A _full client_ is one that allows any user to sign in.
 
-A user's _profile data_ is comprised of the additional fields (`name`, `shortName`, and `username`) specified in the "Authentication code verification" section below.
+A user's _profile data_ is comprised of the additional fields (`name`, `shortName`, and `username`) specified in the _Authentication code verification_ section below.
 
 ## Authentication
 The authentication flow is very similar to IndieAuth. You might want to compare with [section 5 of the IndieAuth spec](https://indieauth.spec.indieweb.org/#authentication).
@@ -38,14 +38,14 @@ When making the verification request, the client _MUST_ add the X-PrivateAuth-Ve
 | `name` | optional | The user's full name. | `"Alex Studer"` |
 | `shortName` | optional | A short version of the user's full name. | `"Alex"` |
 | `username` | **required** | A _unique_ identifier of the user's account at the endpoint. | `"alex"` |
-| `permissions` | **required** | An array of a user's permissions. See the "Permissions" section below. | `["sampleapp:read", "differentapp:documents.read"]` |
+| `permissions` | **required** | An array of a user's permissions. See the _Permissions_ section below. | `["sampleapp:read", "differentapp:documents.read"]` |
 
 The `username` _MUST_ be unique between different users on the same endpoint, but _MAY_ be the same between different users on different endpoints. The `name` and `shortName` fields do not have any uniqueness requirements.
 
 For compatibility reasons, clients _MUST_ be able to ignore additional fields beyond what is specified here. That is, if a future revision of the specification adds additional fields, existing clients _MUST_ ignore the additions.
 
 ## Permissions
-PrivateAuth adds the concept of "permissions": arbitrary strings associated with a user that can be interpreted by clients. Permissions _SHOULD_ be always in lowercase, and _MUST_ be verified in a case-insensitive manner.
+PrivateAuth adds the concept of _permissions_: arbitrary strings associated with a user that can be interpreted by clients. Permissions _SHOULD_ be always in lowercase, and _MUST_ be verified in a case-insensitive manner.
 
 ### Conventions
 _This section is non-normative._
@@ -59,9 +59,9 @@ A client _SHOULD_ report an error if it finds a permission with its application 
 ## Roles
 _This section is non-normative._
 
-The PrivateAuth specification does not have a concept of a user's roles. However, endpoints _MAY_ implement this concept by allowing an administrator to define roles as lists of permissions, and then allow assigning users to those roles.
+The PrivateAuth specification does not include the concept of roles for a user. However, endpoints _MAY_ implement this concept by allowing an administrator to define roles as lists of permissions, and then allow assigning users to those roles.
 
-For example, an administrator could configure their endpoint to have an "Editor" role with permissions of `["sampleapp:read", "sampleapp:write", "differentapp:documents.read", "differentapp:documents.write"]`. Then, any users with this role assigned would automatically have those permissions added to their overall `permissions` array.
+For example, an administrator could configure their endpoint to have an "Editor" role with permissions of `["sampleapp:read", "sampleapp:write", "differentapp:documents.read", "differentapp:documents.write"]`. Then, any users with the "Editor" role assigned would automatically have those permissions added to their overall `permissions` array.
 
 ## Implementations
 * [OpenResty script](https://github.com/thatoddmailbox/privateauth-openresty)
