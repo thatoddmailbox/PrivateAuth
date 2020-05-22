@@ -8,6 +8,8 @@ To a certain degree, this compatibility extends to clients; however, clients tha
 ## Definitions
 A _restricted client_ is one that wishes to limit the users that can sign into it. A _full client_ is one that allows any user to sign in.
 
+A user's _profile data_ is comprised of the additional fields (`name`, `shortName`, and `username`) specified in the "Authentication code verification" section below.
+
 ## Authentication
 The authentication flow is very similar to IndieAuth. You might want to compare with [section 5 of the IndieAuth spec](https://indieauth.spec.indieweb.org/#authentication).
 
@@ -28,6 +30,18 @@ There are no changes to this section from the IndieAuth specification.
 If a restricted client chose to omit the `me` parameter in the intial request, then it is not possible to verify that the returned profile URL's domain is correct. Therefore, this domain check _MAY_ be skipped by restricted clients.
 
 > **Important:** this domain check _MAY NOT_ be skipped in a client that supports both IndieAuth and PrivateAuth logins, as this would be a security flaw. Both IndieAuth clients and PrivateAuth full clients must be able to reject logins from a malicious endpoint&mdash;that is, an endpoint that claims to authenticate users for a domain that it does not control.
+
+When making the verification request, the client _MUST_ add the X-PrivateAuth-Version header, with a value of 1. Endpoints that receive valid requests with this header _MUST_ have a JSON response containing fields according to the following table:
+| Field | Status | Description | Example |
+| ----- | ------ | ----------- | ------- |
+| `me` | **required** | This has the same meaning as it does in the IndieAuth specification. | `"https://alex.studer.dev"`
+| `name` | optional | The user's full name. | `"Alex Studer"` |
+| `shortName` | optional | A short version of the user's full name. | `"Alex"` |
+| `username` | **required** | A _unique_ identifier of the user's account at the endpoint. | `"alex"` |
+
+The `username` _MUST_ be unique between different users on the same endpoint, but _MAY_ be the same between different users on different endpoints. The `name` and `shortName` fields do not have any uniqueness requirements.
+
+For compatibility reasons, clients _MUST_ be able to ignore additional fields beyond what is specified here. That is, if a future revision of the specification adds additional fields, existing clients _MUST_ ignore the additions.
 
 ## Implementations
 * [OpenResty script](https://github.com/thatoddmailbox/privateauth-openresty)
