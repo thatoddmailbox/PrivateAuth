@@ -38,10 +38,30 @@ When making the verification request, the client _MUST_ add the X-PrivateAuth-Ve
 | `name` | optional | The user's full name. | `"Alex Studer"` |
 | `shortName` | optional | A short version of the user's full name. | `"Alex"` |
 | `username` | **required** | A _unique_ identifier of the user's account at the endpoint. | `"alex"` |
+| `permissions` | **required** | An array of a user's permissions. See the "Permissions" section below. | `["sampleapp:read", "differentapp:documents.read"]` |
 
 The `username` _MUST_ be unique between different users on the same endpoint, but _MAY_ be the same between different users on different endpoints. The `name` and `shortName` fields do not have any uniqueness requirements.
 
 For compatibility reasons, clients _MUST_ be able to ignore additional fields beyond what is specified here. That is, if a future revision of the specification adds additional fields, existing clients _MUST_ ignore the additions.
+
+## Permissions
+PrivateAuth adds the concept of "permissions": arbitrary strings associated with a user that can be interpreted by clients. Permissions _SHOULD_ be always in lowercase, and _MUST_ be verified in a case-insensitive manner.
+
+### Conventions
+_This section is non-normative._
+
+While the specification does not strictly impose requirements on what permission strings look like, the convention is to user the client's name, a colon (`:`), and a descriptive string of the permission. If some hierarchy is needed in the descriptive string, a period (`.`) may be used.
+
+For example, a client named "SampleApp" might look for the permissions `sampleapp:read`, `sampleapp:write`, and `sampleapp:admin`. A cloud storage client named "DifferentApp" might have permissions `differentapp:documents.read`, `differentapp:documents.write`, `differentapp:photos.read`, and `differentapp:photos.write`.
+
+A client _SHOULD_ report an error if it finds a permission with its application name that it does not recognize, to protect against configuration errors.
+
+## Roles
+_This section is non-normative._
+
+The PrivateAuth specification does not have a concept of a user's roles. However, endpoints _MAY_ implement this concept by allowing an administrator to define roles as lists of permissions, and then allow assigning users to those roles.
+
+For example, an administrator could configure their endpoint to have an "Editor" role with permissions of `["sampleapp:read", "sampleapp:write", "differentapp:documents.read", "differentapp:documents.write"]`. Then, any users with this role assigned would automatically have those permissions added to their overall `permissions` array.
 
 ## Implementations
 * [OpenResty script](https://github.com/thatoddmailbox/privateauth-openresty)
