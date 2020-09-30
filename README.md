@@ -27,7 +27,7 @@ If an authorization endpoint receives a request without the `me` parameter, it _
 There are no changes to this section from the IndieAuth specification.
 
 ## Authentication code verification
-If a restricted client chose to omit the `me` parameter in the intial request, then it is not possible to verify that the returned profile URL's domain is correct. Therefore, this domain check _MAY_ be skipped by restricted clients.
+If a restricted client chose to omit the `me` parameter in the initial request, then it is not possible to verify that the returned profile URL's domain is correct. Therefore, this domain check _MAY_ be skipped by restricted clients.
 
 > **Important:** this domain check _MAY NOT_ be skipped in a client that supports both IndieAuth and PrivateAuth logins, as this would be a security flaw. Both IndieAuth clients and PrivateAuth full clients must be able to reject logins from a malicious endpoint&mdash;that is, an endpoint that claims to authenticate users for a domain that it does not control.
 
